@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- displays site properly based on user's device -->
+
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="./images/favicon-32x32.png"
+    />
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Red+Hat+Text:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./main.css" />
+
+    <title>Frontend Mentor | Launch countdown timer</title>
+
+    <!-- Feel free to remove these styles or customise in your own stylesheet 👍 -->
+    <style>
+      .attribution {
+        font-size: 11px;
+        text-align: center;
+      }
+      .attribution a {
+        color: hsl(228, 45%, 44%);
+      }
+    </style>
+    <script>
+      function updateEl(elementId, value, animate = true) {
+        value = value.toString().padStart(2, "0");
+        var element = document.getElementById(elementId);
+        element.innerHTML = `
+          <div id="top-new" class="top-new"></div>
+          <div id="bottom-new" class="bottom-new"></div>
+          <div id="bottom-old" class="bottom-old"></div>
+          <div id="top-old" class="top-old"></div>`;
+
+        var topOldEl = document.querySelector("#" + elementId + " .top-old");
+        var topNewEl = document.querySelector("#" + elementId + " .top-new");
+        var bottomOldEl = document.querySelector(
+          "#" + elementId + " .bottom-old"
+        );
+        var bottomNewEl = document.querySelector(
+          "#" + elementId + " .bottom-new"
+        );
+
+        topNewEl.innerHTML = bottomNewEl.innerHTML = value;
+        topOldEl.classList.add("animateOldTop");
+        bottomNewEl.classList.add("animateNewBottom");
+
+        setTimeout(function () {
+          topOldEl.innerHTML = value;
+          topOldEl.classList.remove("animateOldTop");
+        }, 250);
+
+        setTimeout(function () {
+          bottomOldEl.innerHTML = value;
+        }, 350);
+
+        setTimeout(function () {
+          bottomNewEl.classList.remove("animateNewBottom");
+        }, 600);
+      }
+
+      document.addEventListener("DOMContentLoaded", function (event) {
+        let days, hours, minutes, secounds;
+        let minuteInMiniSec = 1000 * 60;
+        let hourInMiniSec = minuteInMiniSec * 60;
+        let dayInMiniSec = hourInMiniSec * 24;
+        let now = new Date();
+        let targetDate =
+          new Date().getTime() +
+          dayInMiniSec +
+          hourInMiniSec +
+          30 * minuteInMiniSec;
+
+        var intervalId = window.setInterval(function () {
+          now = new Date();
+          let distance = targetDate - now;
+          if (distance < 0) {
+            distance = 0;
+            return;
+          }
+          let newDays = Math.floor(distance / dayInMiniSec);
+          let newHours = Math.floor((distance % dayInMiniSec) / hourInMiniSec);
+          let newMinutes = Math.floor(
+            (distance % hourInMiniSec) / minuteInMiniSec
+          );
+          let newSeconds = Math.floor((distance % minuteInMiniSec) / 1000);
+
+          updateEl("seconds", newSeconds);
+          if (newMinutes !== minutes) {
+            updateEl("minutes", newMinutes);
+            minutes = newMinutes;
+          }
+          if (newHours !== hours) {
+            updateEl("hours", newHours);
+            hours = newHours;
+          }
+          if (newDays !== days) {
+            updateEl("days", newDays);
+            days = newDays;
+          }
+        }, 1000);
+      });
+    </script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="title">We're launching soon</div>
+      <div class="timer">
+        <div class="time">
+          <div class="time-box" id="days"></div>
+          <div class="time-label">Days</div>
+        </div>
+        <div class="time">
+          <div class="time-box" id="hours"></div>
+          <div class="time-label">Hours</div>
+        </div>
+        <div class="time">
+          <div class="time-box" id="minutes"></div>
+          <div class="time-label">Minutes</div>
+        </div>
+        <div class="time">
+          <div class="time-box" id="seconds"></div>
+          <div class="time-label">Seconds</div>
+        </div>
+      </div>
+      <div class="social-media">
+        <a href="https://facebook.com" class="icon-facebook"></a>
+        <a href="https://www.pinterest.com/"
+          ><img src="./images/icon-pinterest.svg" alt="" /></a
+        ><a href="https://www.instagram.com/"
+          ><img src="./images/icon-instagram.svg" alt=""
+        /></a>
+      </div>
+    </div>
+
+    <div class="attribution">
+      Challenge by
+      <a href="https://www.frontendmentor.io?ref=challenge" target="_blank"
+        >Frontend Mentor</a
+      >. Coded by <a href="#">Your Name Here</a>.
+    </div>
+  </body>
+</html>
